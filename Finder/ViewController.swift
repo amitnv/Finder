@@ -15,6 +15,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     @IBOutlet weak var imageView: UIImageView!
     
+    
     let imagePicker = UIImagePickerController()
     let photoPicker = UIImagePickerController()
     
