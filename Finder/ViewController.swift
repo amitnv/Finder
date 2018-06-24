@@ -9,12 +9,15 @@
 import UIKit
 import CoreML
 import Vision
-
+import Social
 
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     @IBOutlet weak var imageView: UIImageView!
     
+    @IBOutlet weak var shareButton: UIButton!
+    
+    @IBOutlet weak var searchIcon: UIImageView!
     
     let imagePicker = UIImagePickerController()
     let photoPicker = UIImagePickerController()
@@ -30,7 +33,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         photoPicker.sourceType = .photoLibrary
         photoPicker.allowsEditing = true
         
-        
+        shareButton.isHidden = true
+        searchIcon.isHidden = false
     }
     
 /*    func createAlert(titleText: String, messageText: String) {
@@ -63,21 +67,22 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 fatalError("Model failed to process request")
             }     
             //self.navigationItem.title = results.first?.identifier
-            //let msg = results.first?.identifier
-            //self.createAlert(titleText: "You Found", messageText: msg!)
+            let msg = results.first?.identifier
             let alertWindow = UIWindow(frame: UIScreen.main.bounds)
             alertWindow.rootViewController = UIViewController()
             alertWindow.windowLevel = UIWindowLevelAlert + 1
             
-            let alert = UIAlertController(title: "Here's what I think it is..." , message: results.first?.identifier, preferredStyle: .alert)
+            let alert = UIAlertController(title: "Here's what I think it is..." , message: msg, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action) in
                 alert.dismiss(animated: true, completion: nil)
             }))
             alertWindow.makeKeyAndVisible()
             alertWindow.rootViewController?.present(alert, animated: true, completion: nil)
-            
+            self.shareButton.isHidden = false
+            self.searchIcon.isHidden = true
             
         }
+        
         let handler = VNImageRequestHandler(ciImage: image)
         do {
             try handler.perform([request])
@@ -93,6 +98,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         present(imagePicker, animated: true, completion: nil)
     }
     
+    @IBAction func shareTapped(_ sender: UIButton) {
+        let activityVC = UIActivityViewController(activityItems: ["Hey I found something"], applicationActivities: nil)
+        activityVC.popoverPresentationController?.sourceView = self.view
+        self.present(activityVC, animated: true, completion: nil)
+        
+    }
 }
 
 
